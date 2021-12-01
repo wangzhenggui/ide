@@ -1,0 +1,59 @@
+{
+  "name": "@apaas-lego/ide",
+  "version": "0.0.1",
+  "description": "IDE工具",
+  "author": "wangzhenggui <jianjia.wzg@raycloud.com>",
+  "homepage": "https://github.com/wangzhenggui/lego/tree/main/packages/ide#readme",
+  "license": "ISC",
+  "main": "lib/ide.js",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangzhenggui/lego.git"
+  },
+  "dependencies": {
+    "@ant-design/pro-layout": "^6.5.0",
+    "@apaas-lego/react-render": "^0.0.3",
+    "@apaas-lego/setting-widgets": "^0.0.1",
+    "@umijs/preset-react": "^1.8.22",
+    "classnames": "^2.3.1",
+    "form-render": "^1.4.4",
+    "lodash": "^4.17.21",
+    "monaco-editor": "^0.25.2",
+    "monaco-editor-webpack-plugin": "^4.0.0",
+    "nanoid": "^3.1.23",
+    "react-dnd": "^14.0.2",
+    "react-dnd-html5-backend": "^14.0.0",
+    "react-grid-layout": "^1.2.5",
+    "react-monaco-editor": "^0.43.0",
+    "redux-logger": "^3.0.6",
+    "umi": "^3.4.25"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@umijs/test": "^3.4.25",
+    "lint-staged": "^10.0.7",
+    "prettier": "^2.2.0",
+    "react": "17.x",
+    "react-dom": "17.x",
+    "typescript": "^4.1.2",
+    "yorkie": "^2.0.0"
+  },
+  "scripts": {
+    "start": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi generate tmp",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage"
+  },
+  "bugs": {
+    "url": "https://github.com/wangzhenggui/lego/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

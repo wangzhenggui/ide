@@ -1,0 +1,20 @@
+.dragItem {
+  display: inline-block;
+  cursor: move;
+  padding: 4px;
+  background: #ccc;
+  &:hover {
+    border: 2px solid #06c;
+  }
+  :global(a) {
+    display: block;
+    pointer-events: none;
+  }
+}
+
+.emptyNode {
+  height: 500px;
+  line-height: 500px;
+  text-align: center;
+  font-size: 20px;
+}
