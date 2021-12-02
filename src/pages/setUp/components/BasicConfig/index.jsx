@@ -90,8 +90,9 @@ const RenderForm = ({ currentNode, dispatch, renderTree }) => {
             })
           } else { // 删除操作 找到俩个数组的不同
             const diffArray = difference(refContainer.current, val.items)
-            const index = refContainer.current.indexOf(diffArray[0])
-            subTree.child = subTree.child.filter((tree, inx) => inx !== index)
+            const ides = diffArray.map(item => refContainer.current.indexOf(item)).filter(i => i !== -1)
+            // const index = refContainer.current.indexOf(diffArray[0])
+            subTree.child = subTree.child.filter((tree, inx) => !ides.includes(inx))
           }
         }
         refContainer.current = cloneDeep(val.items)

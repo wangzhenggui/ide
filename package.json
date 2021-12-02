@@ -16,7 +16,7 @@
   "dependencies": {
     "@ant-design/pro-layout": "^6.5.0",
     "@apaas-lego/react-render": "^0.0.3",
-    "@apaas-lego/setting-widgets": "^0.0.1",
+    "@apaas-lego/setting-widgets": "^0.0.3",
     "@umijs/preset-react": "^1.8.22",
     "classnames": "^2.3.1",
     "form-render": "^1.4.4",
