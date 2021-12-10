@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import { isEmpty, cloneDeep, cloneDeepWith, difference, get, toLower } from 'lodash';
 import { nanoid } from 'nanoid';
 import { findNodeById, isRootNode, getInfoBySchema, getPropsBySchema, getPropsByStyleSchema, isTabs, isContainer } from '@/common/tools';
-import { CodeEditor, ColProportion, Rules } from '@apaas-lego/setting-widgets';
+import { CodeEditor, ColProportion, Rules, Gutter } from '@apaas-lego/setting-widgets';
 
 const RenderForm = ({ currentNode, dispatch, renderTree }) => {
   const form = useForm();
@@ -112,7 +112,7 @@ const RenderForm = ({ currentNode, dispatch, renderTree }) => {
       form={form}
       schema={JSON.parse(JSON.stringify(schemas?.basicSchema || {}))}
       watch={watch}
-      widgets={{ CodeEditor, ColProportion, Rules }}
+      widgets={{ CodeEditor, ColProportion, Rules, Gutter }}
     />
   );
 };
