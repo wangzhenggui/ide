@@ -35,9 +35,9 @@ const RenderWidget = ({ componentName, id, props, styleProps, children, sourcePa
     );
   }
   return children ? (
-    <Component {...props} styles={styles}>{children}</Component>
+    <Component {...props} style={styles}>{children}</Component>
   ) : (
-      <Component {...props} styles={styles}/>
+      <Component {...props} style={styles}/>
   );
 };
 

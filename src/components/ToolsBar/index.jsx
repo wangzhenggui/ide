@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'umi'
-import { Button, Modal, Space } from 'antd';
+import { Button, Modal, Space, message } from 'antd';
 import MonacoEditor from 'react-monaco-editor';
 import { connect } from 'dva';
 
@@ -40,12 +40,18 @@ const ToolsBar = ({ dispatch, schema }) => {
         />
       ),
       onOk() {
-        dispatch({
-          type: 'editModal/reSetTree',
-          payload: {
-            renderTree: JSON.parse(inputRef.current.editor.getValue())
-          }
-        })
+        try {
+          const parseJson = JSON.parse(inputRef.current.editor.getValue())
+          dispatch({
+            type: 'editModal/reSetTree',
+            payload: {
+              renderTree: parseJson
+            }
+          })
+        } catch (e) {
+          message.error('请输入正确格式的Schema', 1.5)
+        }
+        
       }
     })
   }
