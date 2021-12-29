@@ -11,8 +11,12 @@ export default {
       title: '布局'
     }, {
       name: '@apaas-lego/react-basic-widgets',
-      version: '0.0.29',
+      version: '0.1.4',
       title: '基础'
+    }, {
+      name: '@apaas-lego/react-form-widgets',
+      version: '0.0.2',
+      title: '表单'
     }],
   },
   reducers: {

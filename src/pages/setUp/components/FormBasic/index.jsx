@@ -9,14 +9,14 @@ const FormBasic = ({ resourceList }) => {
     <div className={styles.leftWrap}>
       {resourceList.map((resource) => {
         return (
-          <>
+          <div style={{marginBottom: '16px'}}>
             <h3>{resource.title}</h3>
             <div className={styles.templatesLayout}>
               {get(window, `${resource.name}.showComponentList`).map((item) => {
                 return <Drag item={item} key={item.type} />;
               })}
             </div>
-          </>
+          </div>
         );
       })}
     </div>
