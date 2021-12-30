@@ -11,7 +11,6 @@ const Drag = memo((props) => {
       componentZhName: item?.schema?.name,
       componentName: item?.schema?.type,
       sourcePackage: item?.schema?.__source__,
-      // schemas: item?.schema,
       props: {},
     },
     collect: (monitor) => ({

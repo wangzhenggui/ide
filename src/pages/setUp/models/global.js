@@ -10,7 +10,7 @@ export default {
       title: '布局'
     }, {
       name: '@apaas-lego/react-basic-widgets',
-      version: '0.1.6',
+      version: '0.1.13',
       title: '基础'
     }, {
       name: '@apaas-lego/react-form-widgets',

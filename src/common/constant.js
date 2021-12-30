@@ -61,3 +61,5 @@ export const ROOT_NODE_FLAG = '#';
 export const NODE_FROM_ADD = 'add'; // 左侧添加
 export const NODE_FROM_MOVE = 'move'; // 容器类移动
 
+export const COMPONENT_MODE_PREVIEW = 'preview' // 组件预览模式
+export const COMPONENT_MODE_EDIT = 'edit' // 组件在IDE模式
