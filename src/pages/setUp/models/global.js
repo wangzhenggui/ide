@@ -2,7 +2,6 @@ export default {
   namespace: 'globalSetting',
   state: {
     setting: {},
-    functionExpressionModal: false,
     globalFunctionContext: '',
     loading: true,
     resourceList: [{
@@ -11,7 +10,7 @@ export default {
       title: '布局'
     }, {
       name: '@apaas-lego/react-basic-widgets',
-      version: '0.1.4',
+      version: '0.1.6',
       title: '基础'
     }, {
       name: '@apaas-lego/react-form-widgets',
@@ -26,12 +25,6 @@ export default {
         renderDataSource,
         currentRecord: payload,
       };
-    },
-    setFunctionExpressionModal(state, { payload }) {
-      return {
-        ...state,
-        functionExpressionModal: payload
-      }
     },
     setGlobalFunctionContext(state, { payload }) {
       return {

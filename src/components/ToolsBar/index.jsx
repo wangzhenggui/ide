@@ -3,6 +3,7 @@ import { Link } from 'umi'
 import { Button, Modal, Space, message } from 'antd';
 import MonacoEditor from 'react-monaco-editor';
 import { connect } from 'dva';
+import styles from './index.less'
 
 const ToolsBar = ({ dispatch, schema }) => {
   const inputRef = useRef(null);
@@ -56,7 +57,7 @@ const ToolsBar = ({ dispatch, schema }) => {
     })
   }
   return (
-    <Space style={{display: 'flex', justifyContent: 'center', padding: '12px'}}>
+    <Space className={styles.wrap}>
       <Button onClick={clearSchema}>
         清空
       </Button>

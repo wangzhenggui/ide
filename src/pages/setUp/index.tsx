@@ -8,7 +8,6 @@ import ToolsBar from '@/components/ToolsBar';
 import Left from './components/Left';
 import Container from './components/Container';
 import Right from './components/Right';
-import FunctionExpressionModal from './components/FunctionExpressionModal';
 import styles from './index.less';
 
 window['React'] = React;
@@ -49,7 +48,6 @@ const SetUp = ({ loading, dispatch, resourceList } : any) => {
           <DndProvider backend={HTML5Backend}>
             <ToolsBar />
             <div className={styles.container}>
-              <FunctionExpressionModal />
               <Left />
               <Container />
               <Right />

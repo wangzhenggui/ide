@@ -147,7 +147,6 @@ const ComponentTree = ({ renderTree, currentNode, dispatch }) => {
   }
   return (
     <div className={styles.leftWrap}>
-      <h3>大纲树</h3>
       <Tree
         className="draggable-tree"
         showLine
