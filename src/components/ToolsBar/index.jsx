@@ -11,6 +11,9 @@ const ToolsBar = ({ dispatch, schema }) => {
     dispatch({
       type: 'editModal/clearTree'
     })
+    dispatch({
+      type: 'modalView/clearView'
+    })
   }
   const handleExport = () => {
     Modal.info({

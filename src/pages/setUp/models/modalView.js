@@ -30,6 +30,13 @@ export default {
         currentSelectModalView: null
       };
     },
+    clearView(state) {
+      return {
+        ...state,
+        modalViews: [],
+        currentSelectModalView: null
+      }
+    },
     toggleCurrentModalView(state, { payload }) {
       const currentModal = find(state.modalViews, { id: payload.id }, null)
       return {
