@@ -7,7 +7,8 @@ import {
   ROOT_NODE_FLAG,
   COMPONENT_TYPE_BASIC,
 } from '@/common/constant';
-import { findIndex, get, set } from 'lodash';
+import { nanoid } from 'nanoid';
+import { findIndex, get, set, toLower } from 'lodash';
 
 export const isAntComp = (type) => type === COMPONENT_SOURCE_ANTD;
 export const isOfficeComp = (type) => type === COMPONENT_SOURCE_OFFICE;
@@ -174,4 +175,23 @@ export const ideOutPutSchemaToRenderSchema = (chiles, node) => {
     delete node.child
   }
   return node;
+}
+
+export const newNodeItem = (item) => {
+  const newId = `${toLower(item.componentName)}-${nanoid(16)}`; // 每个组件生成唯一id
+  // 通过sourcePackage、componentName获取schema
+  const resourceSchema = getInfoBySchema(item.sourcePackage, item.componentName)
+  const basicProps = getPropsBySchema(resourceSchema?.basicSchema);
+  const styleProps = getPropsByStyleSchema(resourceSchema?.styleSchema);
+  const expandProps = getPropsBySchema(resourceSchema?.expandSchema);
+  const newNode = {
+    ...item,
+    id: newId,
+    props: { ...basicProps, id: newId },
+    styleProps,
+    expandProps,
+    __componentType__: resourceSchema?.__componentType__,
+    child: [],
+  };
+  return newNode;
 }

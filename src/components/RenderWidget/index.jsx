@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form } from 'antd';
 import { get } from 'lodash';
+import Overlay from '../Overlay';
 import { isFormType, isContainerType, getInfoBySchema } from '@/common/tools';
 import { ROOT_NODE_FLAG, COMPONENT_MODE_EDIT } from '@/common/constant';
 

@@ -16,12 +16,13 @@ import {
   moveNode,
   removeNodeOnParentTree,
   getInfoBySchema,
+  newNodeItem,
 } from '@/common/tools';
 import { nanoid } from 'nanoid';
 import { toLower, cloneDeep, findIndex, isEmpty, eq, get } from 'lodash';
 import styles from './index.less';
 
-const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
+const Wrapper = ({ children, id, renderTree, dispatch, currentNode, currentSelectModalView, isDrag }) => {
   const rootNode = isRootNode(id);
   const isSelected = currentNode?.id === id;
   const idToNode = findNodeById([renderTree], id);
@@ -50,23 +51,17 @@ const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
       if (didDrop) {
         return;
       }
+      const resourceSchema = getInfoBySchema(item.sourcePackage, item.componentName)
       const copyRenderTree = cloneDeep(renderTree);
       // 通过判断item中是否存在id，来区分是左侧菜单添加还是移动操作
-      /**
-       * 移动操作
-       * 1、找到当前操作节点的父节点
-       * 2、父节点中移出当前节点 [如果父节点和移入节点的父节点是同一个，那么表示同层移动]
-       * 3、找到移入节点，当前移入节点是否支持有子节点
-       * 4、如果支持有子节点，则移入到移入节点的下面，否则移入到移入节点的父节点下
-       */
-      /**
-       * 添加操作
-       * 1、生成唯一id
-       * 2、通过schema生成默认props
-       * 3、添加一个节点到renderTree里面 [添加到哪里？拖放到容器组件中呢？添加的顺序呢？]
-       *
-       */
       if (item.id) {
+        /**
+         * 移动操作
+         * 1、找到当前操作节点的父节点
+         * 2、父节点中移出当前节点 [如果父节点和移入节点的父节点是同一个，那么表示同层移动]
+         * 3、找到移入节点，当前移入节点是否支持有子节点
+         * 4、如果支持有子节点，则移入到移入节点的下面，否则移入到移入节点的父节点下
+         */
         // TODO: 需要遍历树3次，不可接受，后面给重构了
         const dragNodeParent = findNodeParentById(
           [copyRenderTree],
@@ -145,40 +140,27 @@ const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
           },
         });
       } else {
+        /**
+         * 添加操作
+         * 1、生成唯一id
+         * 2、通过schema生成默认props
+         * 3、添加一个节点到renderTree里面 [添加到哪里？拖放到容器组件中呢？添加的顺序呢？]
+         *
+         */
         // 添加,找到当前moveIn组件的最近容器组件【即是父组件-只有父组件是容器组件，才会有子组件】
-        const moveInNode = findNodeById([copyRenderTree], id);
+        let moveInNode = findNodeById([copyRenderTree], id);
+        // 浮层组件，添加到Root节点下
+        if (get(resourceSchema, '__showModal__')) {
+          moveInNode = findNodeById([copyRenderTree], '#');
+        }
         const moveInNodeParent = findNodeParentById(
           [copyRenderTree],
           id,
           copyRenderTree,
         );
-        const newId = `${toLower(item.componentName)}-${nanoid(16)}`; // 每个组件生成唯一id
-
-        // 通过sourcePackage、componentName获取schema
-        const resourceSchema = getInfoBySchema(item.sourcePackage, item.componentName)
-        const basicProps = getPropsBySchema(resourceSchema?.basicSchema);
-        const styleProps = getPropsByStyleSchema(resourceSchema?.styleSchema);
-        const expandProps = getPropsBySchema(resourceSchema?.expandSchema);
-        const newNode = {
-          ...item,
-          id: newId,
-          props: { ...basicProps, id: newId },
-          styleProps,
-          expandProps,
-          __componentType__: resourceSchema?.__componentType__,
-          child: [],
-        };
-        /**
-         * child: []
-            componentName: "ApaasTabs"
-            componentZhName: "选项卡"
-            expandProps: {didMount: ''}
-            id: "apaastabs-7P-WyoGvrmTVGXfD"
-            props: {items: Array(3), id: 'apaastabs-7P-WyoGvrmTVGXfD'}
-            sourcePackage: "@apaas-lego/react-basic-widgets"
-            styleProps: {width: undefined, height: undefined, background: undefined, display: 'block', flexDirection: 'row', …}
-            __componentType__: "basic"
-         */
+        const newNode = newNodeItem(item)
+        
+        // 拥有子容器的组件逻辑 选项卡 布局组件
         if (!isEmpty(get(resourceSchema, '__subContainer__'))) {
           // TODO: 组件schema内部定义
           const { packageName, slotContainerName, lengthDependencies } = get(resourceSchema, '__subContainer__', {});
@@ -206,7 +188,7 @@ const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
         }
         
         // 当前节点是容器节点，或者是Root节点
-        if (isContainerType(moveInNode?.__componentType__) || rootNode) {
+        if (isContainerType(moveInNode?.__componentType__) || rootNode || get(resourceSchema, '__showModal__')) {
           moveInNode?.child.push(newNode);
         } else {
           insertNodeIntoParentTree(
@@ -223,6 +205,15 @@ const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
             currentNode: newNode,
           },
         });
+        // TODO: 对于modal类型的组件，不存放在dom树中，我们将它单独放在一个地方存储
+        if (resourceSchema?.__showModal__) {
+          dispatch({
+            type: 'modalView/addView',
+            payload: {
+              data: newNode
+            }
+          })
+        }
       }
     },
     hover: (item, monitor) => {
@@ -277,20 +268,16 @@ const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
 
   const handleDelete = (e) => {
     e.stopPropagation();
-    const copyRenderTree = cloneDeep(renderTree);
-    // 找到当前节点的父节点，并且删除它，并设置当前节点为null
-    let dragNodeParent = findNodeParentById(
-      [copyRenderTree],
-      id,
-      copyRenderTree,
-    );
-    const afterMovedDragNode = removeNodeOnParentTree(dragNodeParent, id);
-    dragNodeParent.child = afterMovedDragNode;
     dispatch({
       type: 'editModal/removeNodeInTree',
       payload: {
-        renderTree: copyRenderTree,
-        currentNode: null,
+        id
+      },
+    });
+    dispatch({
+      type: 'modalView/removeView',
+      payload: {
+        id
       },
     });
   };
@@ -330,6 +317,8 @@ const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
         [styles.unSelect]: !isSelected,
         [styles.hoverUp]: isActive && position === 'up',
         [styles.hoverDown]: isActive && position === 'down',
+        [styles.hoverComponent]: get(currentSchema, '__showModal__'),
+        [styles.hide]: get(currentSchema, '__showModal__') && (currentSelectModalView?.id !== id || isDrag) // 复层组件类型 + 有浮层组件被拖拉 + 当前节点 != 选中节点
       })}
       onClick={handleClick}
     >
@@ -375,4 +364,6 @@ const Wrapper = ({ children, id, renderTree, dispatch, currentNode }) => {
 export default connect((state) => ({
   renderTree: state?.editModal?.renderTree,
   currentNode: state?.editModal?.currentNode,
+  currentSelectModalView: state?.modalView?.currentSelectModalView,
+  isDrag: state?.modalView?.isDrag
 }))(Wrapper);

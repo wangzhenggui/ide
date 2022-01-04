@@ -1,10 +1,12 @@
-import React, { useMemo, memo } from 'react';
+import React, { useMemo, memo, useState } from 'react';
 import { useDrag } from 'react-dnd';
+import { connect } from 'dva';
 import { DRAG_TYPE } from '../../common/constant';
 import Template from '../Tpl';
 
 const Drag = memo((props) => {
-  const { item = {} } = props;
+  const [lock, setLock] = useState(true)
+  const { item = {}, dispatch } = props;
   const [{ isDragging }, drag] = useDrag({
     type: DRAG_TYPE,
     item: {
@@ -24,6 +26,20 @@ const Drag = memo((props) => {
     }),
     [isDragging],
   );
+
+  useMemo(() => {
+    if (!lock && item?.schema?.__showModal__) {
+      console.log('isDragging', isDragging)
+      dispatch({
+        type: 'modalView/toggleDrag',
+        payload: {
+          isDrag: isDragging,
+        },
+      })
+    }
+    setLock(false)
+  }, [isDragging])
+
   return (
     <div ref={drag}>
       <Template name={item?.schema?.name} style={{ ...containerStyle }} />
@@ -31,4 +47,4 @@ const Drag = memo((props) => {
   );
 });
 
-export default Drag;
+export default connect()(Drag);

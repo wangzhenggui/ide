@@ -14,6 +14,8 @@ import {
   removeNodeOnParentTree,
   getInfoBySchema
 } from '@/common/tools';
+import { ROOT_NODE_FLAG } from '@/common/constant';
+import ModalSelectView from '../ModalSelectView';
 import styles from './index.less';
 
 const transData = (originObject) => {
@@ -32,12 +34,18 @@ const ComponentTree = ({ renderTree, currentNode, dispatch }) => {
   }, [renderTree])
 
   const onSelect = (selectedKeys) => {
-    if(isEmpty(selectedKeys)) return 
+    if(get(selectedKeys, '0') === ROOT_NODE_FLAG || isEmpty(selectedKeys)) return 
     const currentClickNode = findNodeById([renderTree], get(selectedKeys, '0'));
     dispatch({
       type: 'editModal/changeCurrentNode',
       payload: {
         currentNode: currentClickNode,
+      },
+    });
+    dispatch({
+      type: 'modalView/toggleCurrentModalView',
+      payload: {
+        id: get(selectedKeys, '0'),
       },
     });
   }
@@ -147,6 +155,7 @@ const ComponentTree = ({ renderTree, currentNode, dispatch }) => {
   }
   return (
     <div className={styles.leftWrap}>
+      <ModalSelectView />
       <Tree
         className="draggable-tree"
         showLine
